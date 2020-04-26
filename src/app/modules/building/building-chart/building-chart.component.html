@@ -1,0 +1,19 @@
+<div>
+
+    <div>
+        <form [formGroup]="searchForms">
+            <mat-form-field>
+                <mat-label>Building</mat-label>
+                <input type="text" formControlName="buildingId" matInput placeholder="select building">
+            </mat-form-field>
+        </form>
+        <pre>
+        {{searchForms.value|json}}
+    </pre>
+    </div>
+
+    <div>
+        Chart
+    </div>
+
+</div>

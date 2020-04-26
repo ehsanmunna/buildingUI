@@ -3,6 +3,14 @@ import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { BuildingModule } from './modules/building/building.module';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { FlexLayoutModule } from '@angular/flex-layout';
+
+const materialModules = [
+  MatToolbarModule
+];
 
 @NgModule({
   declarations: [
@@ -10,7 +18,11 @@ import { AppComponent } from './app.component';
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    BuildingModule,
+    BrowserAnimationsModule,
+    FlexLayoutModule,
+    materialModules
   ],
   providers: [],
   bootstrap: [AppComponent]
