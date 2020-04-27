@@ -14,9 +14,12 @@ import {
   MatSelectModule,
   MatProgressSpinnerModule,
   MatDatepickerModule,
-  MatAutocompleteModule
+  MatAutocompleteModule,
+  MatNativeDateModule
 } from '@angular/material';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { SharedModule } from '../shared/shared.module';
+import { NgxDaterangepickerMd } from 'ngx-daterangepicker-material';
 
 const materialModules = [
   MatButtonModule,
@@ -30,7 +33,8 @@ const materialModules = [
   MatSelectModule,
   MatAutocompleteModule,
   MatDatepickerModule,
-  MatProgressSpinnerModule
+  MatProgressSpinnerModule,
+  MatNativeDateModule
 ];
 
 @NgModule({
@@ -42,7 +46,9 @@ const materialModules = [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-    materialModules
+    materialModules,
+    SharedModule,
+    NgxDaterangepickerMd.forRoot()
   ]
   , exports: [
     materialModules

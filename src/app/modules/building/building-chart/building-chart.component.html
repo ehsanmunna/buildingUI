@@ -1,11 +1,59 @@
 <div>
 
     <div>
-        <form [formGroup]="searchForms">
+        <form [formGroup]="searchForms" fxLayout="row" fxLayoutGap="10px">
             <mat-form-field>
-                <mat-label>Building</mat-label>
-                <input type="text" formControlName="buildingId" matInput placeholder="select building">
+                <input type="text" placeholder="buildings" formControlName="building" aria-label="Number" matInput
+                    [matAutocomplete]="autoBuilding">
+                <mat-autocomplete #autoBuilding="matAutocomplete" [displayWith]="displayBuildingFn"
+                    (optionSelected)='setToBuildingId($event.option.value)'>
+                    <mat-option *ngFor="let item of buildingList" [value]="item">
+                        {{ item.Name }}
+                    </mat-option>
+                </mat-autocomplete>
             </mat-form-field>
+            <mat-form-field>
+                <input type="text" placeholder="Select Objects" formControlName="object" aria-label="Number" matInput
+                    [matAutocomplete]="autoObject">
+                <mat-autocomplete #autoObject="matAutocomplete" [displayWith]="displayObjectFn"
+                    (optionSelected)='setToObjectId($event.option.value)'>
+                    <mat-option *ngFor="let item of ObjectList" [value]="item">
+                        {{ item.Name }}
+                    </mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+            <mat-form-field>
+                <input type="text" placeholder="Select Data Field" formControlName="dataField" aria-label="Number"
+                    matInput [matAutocomplete]="autoDataField">
+                <mat-autocomplete #autoDataField="matAutocomplete" [displayWith]="displayDataFieldFn"
+                    (optionSelected)='setToDataFieldId($event.option.value)'>
+                    <mat-option *ngFor="let item of dataFieldList" [value]="item">
+                        {{ item.Name }}
+                    </mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+
+            <!-- <mat-form-field>
+                <mat-label>Choose a from date</mat-label>
+                <input formControlName="formDate" matInput [matDatepicker]="picker1">
+                <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                <mat-datepicker #picker1></mat-datepicker>
+              </mat-form-field>
+
+              <mat-form-field>
+                <mat-label>Choose a to date</mat-label>
+                <input formControlName="toDate" matInput [matDatepicker]="picker2">
+                <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+                <mat-datepicker #picker2></mat-datepicker>
+              </mat-form-field> -->
+
+              <mat-form-field>
+                <input matInput ngxDaterangepickerMd
+                [timePicker]="true" [formControl]="searchForms.get('dateRange')" placeholder="date range" />
+              </mat-form-field>
+                
+
+            <button mat-raised-button color="primary" (click)="search()" >SEARCH</button>
         </form>
         <pre>
         {{searchForms.value|json}}
