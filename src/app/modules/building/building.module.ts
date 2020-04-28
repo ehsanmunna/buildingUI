@@ -20,6 +20,7 @@ import {
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { SharedModule } from '../shared/shared.module';
 import { NgxDaterangepickerMd } from 'ngx-daterangepicker-material';
+import { ChartModule } from 'angular-highcharts';
 
 const materialModules = [
   MatButtonModule,
@@ -47,8 +48,10 @@ const materialModules = [
     FormsModule,
     ReactiveFormsModule,
     materialModules,
+    FlexLayoutModule,
     SharedModule,
-    NgxDaterangepickerMd.forRoot()
+    NgxDaterangepickerMd.forRoot(),
+    ChartModule
   ]
   , exports: [
     materialModules

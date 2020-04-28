@@ -1,9 +1,9 @@
 <div>
 
-    <div>
-        <form [formGroup]="searchForms" fxLayout="row" fxLayoutGap="10px">
+    <div style="padding: 15px;">
+        <form [formGroup]="searchForms" fxLayoutAlign="space-between center" fxLayout="row" fxLayoutGap="10px">
             <mat-form-field>
-                <input type="text" placeholder="buildings" formControlName="building" aria-label="Number" matInput
+                <input type="text" placeholder="Select Buildings" formControlName="building" aria-label="Number" matInput
                     [matAutocomplete]="autoBuilding">
                 <mat-autocomplete #autoBuilding="matAutocomplete" [displayWith]="displayBuildingFn"
                     (optionSelected)='setToBuildingId($event.option.value)'>
@@ -49,19 +49,24 @@
 
               <mat-form-field>
                 <input matInput ngxDaterangepickerMd
-                [timePicker]="true" [formControl]="searchForms.get('dateRange')" placeholder="date range" />
+                [timePicker]="true" [formControl]="searchForms.get('dateRange')" placeholder="Date Range" />
               </mat-form-field>
                 
 
             <button mat-raised-button color="primary" (click)="search()" >SEARCH</button>
         </form>
-        <pre>
+        <!-- <pre>
         {{searchForms.value|json}}
-    </pre>
+    </pre> -->
     </div>
 
     <div>
-        Chart
+        <!-- <canvas id="myChart" width="400" height="400"></canvas> -->
+        <mat-spinner *ngIf="isLoading" diameter="30"></mat-spinner>
+        <div [chart]="chart"></div>
+        <!-- <pre>
+            {{readingList | json}}
+        </pre> -->
     </div>
 
 </div>

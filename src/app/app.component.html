@@ -1,7 +1,11 @@
-
-
-<mat-toolbar>My App</mat-toolbar>
-
-<button routerLink="building/chart" mat-raised-button color="accent" >Chart</button>
+<mat-toolbar color="primary">
+    <mat-toolbar-row>
+      <h1>Reading</h1>
+      <span fxFlex></span>
+      <div>
+        <a mat-stroked-button [routerLink]="'/building/chart'"> Chart </a>
+      </div>
+    </mat-toolbar-row>
+  </mat-toolbar>
 
 <router-outlet></router-outlet>

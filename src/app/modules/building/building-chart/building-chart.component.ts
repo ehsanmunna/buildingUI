@@ -2,25 +2,27 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { BuildingService } from '../../shared/services/building.service';
 import { IBuilding, IObject, IDataField, IReading } from 'src/app/interfaces/app-interface';
-import { UnsubscribeAdapter } from 'src/app/Class/unsubscribe-adapter';
-import { debounceTime } from 'rxjs/operators';
 import { DataFieldService } from '../../shared/services/data-field.service';
 import { ObjectService } from '../../shared/services/object.service';
 import { ReadingService } from '../../shared/services/reading.service';
 import { DatePipe } from '@angular/common';
 import * as moment from 'moment';
+// import Chart from 'chart.js';
+import { Chart } from 'angular-highcharts';
+import { BaseCompoment } from 'src/app/Class/base-compoment';
 
 @Component({
   selector: 'app-building-chart',
   templateUrl: './building-chart.component.html',
   styleUrls: ['./building-chart.component.sass']
 })
-export class BuildingChartComponent extends UnsubscribeAdapter implements OnInit {
+export class BuildingChartComponent extends BaseCompoment implements OnInit {
   public searchForms: FormGroup;
   public buildingList: IBuilding[];
   public ObjectList: IObject[];
   public dataFieldList: IDataField[];
   public readingList;
+  public chart;
   constructor(
     private formBuilder: FormBuilder,
     private buildingService: BuildingService,
@@ -44,41 +46,78 @@ export class BuildingChartComponent extends UnsubscribeAdapter implements OnInit
       this.searchForms.get('building')
         .valueChanges
         .subscribe(res => {
-          console.log(res);
-          this.subs.add(
-            this.buildingService.getBuildingByName(res)
-              .subscribe((resp: IBuilding[]) => {
-                this.buildingList = resp;
-              })
-          );
+          if (res) {
+            this.subs.add(
+              this.buildingService.getBuildingByName(res)
+                .subscribe((resp: IBuilding[]) => {
+                  this.buildingList = resp;
+                })
+            );
+          }
         }),
       this.searchForms.get('object')
         .valueChanges
         .subscribe(res => {
-          console.log(res);
-          this.subs.add(
-            this.objectService.getObjectByName(res)
-              .subscribe((resp: IBuilding[]) => {
-                this.ObjectList = resp;
-              })
-          );
+          if (res) {
+            this.subs.add(
+              this.objectService.getObjectByName(res)
+                .subscribe((resp: IBuilding[]) => {
+                  this.ObjectList = resp;
+                })
+            );
+          }
         }),
       this.searchForms.get('dataField')
         .valueChanges
         .subscribe(res => {
-          console.log(res);
-          this.subs.add(
-            this.dataFieldService.getDataFieldByName(res)
-              .subscribe((resp: IBuilding[]) => {
-                this.dataFieldList = resp;
-              })
-          );
+          if (res) {
+            this.subs.add(
+              this.dataFieldService.getDataFieldByName(res)
+                .subscribe((resp: IBuilding[]) => {
+                  this.dataFieldList = resp;
+                })
+            );
+          }
         })
     );
+    this.renderChart([]);
+
+  }
+
+  renderChart(cdata: number[]) {
+    this.chart = new Chart({
+      chart: {
+        zoomType: 'x'
+      },
+      title: {
+        text: 'Unit rate over time'
+      },
+      subtitle: {
+        text: document.ontouchstart === undefined ?
+          'Click and drag in the plot area to zoom in' : 'Pinch the chart to zoom in'
+      },
+      xAxis: {
+        type: 'datetime'
+      },
+      yAxis: {
+        title: {
+          text: 'Unit'
+        }
+      },
+      legend: {
+        enabled: false
+      },
+
+      series: [{
+        type: 'area',
+        name: 'Reading',
+        data: cdata
+      }]
+    });
   }
 
   search() {
-    console.log(this.searchForms.value);
+    this.isLoading = true;
     const frmValue = this.searchForms.value;
     const srcVal = {
       buildingId: frmValue.buildingId,
@@ -87,13 +126,22 @@ export class BuildingChartComponent extends UnsubscribeAdapter implements OnInit
       // dateRange: moment( frmValue.dateRange, 'yyyy-MM-dd HH:mm:ss' )
     };
     if (frmValue.dateRange) {
-      srcVal['startDate'] = moment( frmValue.dateRange.startDate ).format('YYYY-MM-DD HH:mm:ss');
-      srcVal['endDate'] = moment( frmValue.dateRange.endDate ).format('YYYY-MM-DD HH:mm:ss');
+      srcVal['startDate'] = moment(frmValue.dateRange.startDate).format('YYYY-MM-DD HH:mm:ss');
+      srcVal['endDate'] = moment(frmValue.dateRange.endDate).format('YYYY-MM-DD HH:mm:ss');
     }
 
     this.readingService.getRedings(srcVal)
-      .subscribe(res => {
+      .subscribe((res: any[]) => {
         this.readingList = res;
+        let data = [];
+        for (let i = 0; i < res.length; i++) {
+          const element = res[i];
+          data.push([new Date(element.Timestamp).getTime(), element.Value]);
+        }
+        this.isLoading = false;
+        this.renderChart(data);
+      }, () => {
+        this.isLoading = false;
       });
   }
 
